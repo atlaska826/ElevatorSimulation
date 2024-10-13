@@ -11,23 +11,23 @@ Elevator::Elevator()
  */
 
 // Sets the elevator's current floor
-void Elevator::setCurrentFloor(int currentFloor) {
-    this->currentFloor = currentFloor;
+void Elevator::setCurrentFloor(int cF) {
+    currentFloor = cF;
 }
 
 // Sets the elevator's destination floor
-void Elevator::setDestinationFloor(int destinationFloor) {
-    this->destinationFloor = destinationFloor;
+void Elevator::setDestinationFloor(int dF) {
+    destinationFloor = dF;
 }
 
 // Sets the elevator's direction
-void Elevator::setDirection(int direction) {
-    this->direction = direction;
+void Elevator::setDirection(int d) {
+    direction = d;
 }
 
 // Sets the elevator's capacity
-void Elevator::setCapacity(int capacity) {
-    this->capacity = capacity;
+void Elevator::setCapacity(int c) {
+    capacity = c;
 }
 
 /*

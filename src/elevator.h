@@ -11,10 +11,10 @@ public:
     Elevator();
 
     // Setters
-    void setCurrentFloor(int currentFloor);
-    void setDestinationFloor(int destinationFloor);
-    void setDirection(int direction);
-    void setCapacity(int capacity);
+    void setCurrentFloor(int cF);
+    void setDestinationFloor(int dF);
+    void setDirection(int d);
+    void setCapacity(int c);
 
     // Getters
     std::list<Passenger>& getPassengers();
