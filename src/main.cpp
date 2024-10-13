@@ -9,5 +9,10 @@ int main() {
 
     ElevatorController controller(numFloors, numElevators, elevatorCapacity);
 
+    while (true) {
+        controller.incrementTime();
+        break;
+    }
+
     return 0;
 }

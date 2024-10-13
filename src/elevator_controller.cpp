@@ -2,7 +2,7 @@
 
 // Constructor
 ElevatorController::ElevatorController(int numFloors, int numElevators, int elevatorCapacity)
-    : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity) {
+    : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity), currentTime(0) {
 
     // Initialize elevator array
     elevators = new Elevator[numElevators];
@@ -19,6 +19,22 @@ ElevatorController::ElevatorController(int numFloors, int numElevators, int elev
 // Destructor
 ElevatorController::~ElevatorController() {
     delete[] elevators;  // Free the dynamically allocated array
+}
+
+/*
+ * ============
+ * TIME CONTROL
+ * ============
+ */
+
+// Increments the time
+void ElevatorController::incrementTime() {
+    currentTime++;
+}
+
+// Gets the current time
+int ElevatorController::getCurrentTime() {
+    return currentTime;
 }
 
 /*
