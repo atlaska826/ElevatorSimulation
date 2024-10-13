@@ -1,27 +1,34 @@
 #ifndef ELEVATORSIMULATION_ELEVATOR_H
 #define ELEVATORSIMULATION_ELEVATOR_H
 
-#include <queue>
+#include "Passenger.h"
 
-struct Passenger {
-    int initialFloor;
-    int destinationFloor;
-    int direction;
-    int timeEntered;
-
-    Passenger(int initial, int destination, int direct, int time)
-        : initialFloor(initial), destinationFloor(destination), direction(direct), timeEntered(time) {}
-};
+#include <list>
 
 class Elevator {
-private:
-    std::queue<Passenger> elevatorQueue;
-    int initialFloor;
-    int destinationFloor; // May remove this later
-    int direction;
-    int numPassengers;
-    int capacity; // May remove this later
-};
+public:
+    // Constructor
+    Elevator();
 
+    // Setters
+    void setCurrentFloor(int currentFloor);
+    void setDestinationFloor(int destinationFloor);
+    void setDirection(int direction);
+    void setCapacity(int capacity);
+
+    // Getters
+    std::list<Passenger>& getPassengers();
+    int getCurrentFloor() const;
+    int getDestinationFloor() const;
+    int getDirection() const;
+    int getCapacity() const;
+
+private:
+    std::list<Passenger> passengers;
+    int currentFloor;
+    int destinationFloor;
+    int direction;
+    int capacity;
+};
 
 #endif
