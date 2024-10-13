@@ -1,0 +1,10 @@
+#ifndef ELEVATORSIMULATION_ELEVATOR_H
+#define ELEVATORSIMULATION_ELEVATOR_H
+
+
+class Elevator {
+
+};
+
+
+#endif
