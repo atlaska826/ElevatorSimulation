@@ -23,6 +23,9 @@ public:
     int getDirection() const;
     int getCapacity() const;
 
+    // Control Functions
+    bool elevatorAtCapacity();
+
 private:
     std::list<Passenger> passengers;
     int currentFloor;

@@ -60,3 +60,14 @@ int Elevator::getDirection() const {
 int Elevator::getCapacity() const {
     return capacity;
 }
+
+/*
+ * =================
+ * CONTROL FUNCTIONS
+ * =================
+ */
+
+// Checks if the elevator is at capacity
+bool Elevator::elevatorAtCapacity() {
+    return (passengers.size() == capacity);
+}
