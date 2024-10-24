@@ -73,6 +73,6 @@ int Elevator::getNumPassengers() const {
  */
 
 // Checks if the elevator is at capacity
-bool Elevator::elevatorAtCapacity() {
+bool Elevator::elevatorAtCapacity() const {
     return (numPassengers == capacity);
 }

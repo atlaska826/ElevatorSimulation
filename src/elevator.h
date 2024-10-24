@@ -26,7 +26,7 @@ public:
     int getNumPassengers() const;
 
     // Control Functions
-    bool elevatorAtCapacity();
+    bool elevatorAtCapacity() const;
 
 private:
     std::vector<std::stack<Passenger>> passengers;
