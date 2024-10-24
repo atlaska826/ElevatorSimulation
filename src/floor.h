@@ -1,7 +1,7 @@
 #ifndef ELEVATORSIMULATION_FLOOR_H
 #define ELEVATORSIMULATION_FLOOR_H
 
-#include "Passenger.h"
+#include "passenger.h"
 
 #include <queue>
 

@@ -1,7 +1,7 @@
 #ifndef ELEVATORSIMULATION_ELEVATOR_H
 #define ELEVATORSIMULATION_ELEVATOR_H
 
-#include "Passenger.h"
+#include "passenger.h"
 
 #include <vector>
 #include <stack>
