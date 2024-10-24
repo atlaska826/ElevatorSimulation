@@ -4,8 +4,6 @@
 #include "elevator.h"
 #include "floor.h"
 
-#include <map>
-
 class ElevatorController {
 public:
     // Constructor and Destructor
@@ -25,7 +23,7 @@ private:
     int numElevators;
     int elevatorCapacity;
     int currentTime;
-    std::map<int, Floor> floors;
+    Floor* floors;
     Elevator* elevators;
 };
 

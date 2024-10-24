@@ -10,15 +10,15 @@ ElevatorController::ElevatorController(int numFloors, int numElevators, int elev
         elevators[i].setCapacity(elevatorCapacity);
     }
 
-    // Initialize floor map
-    for (int i = 0; i < numFloors; ++i) {
-        floors[i] = Floor();
-    }
+    // Initialize floor array
+    floors = new Floor[numFloors];
 }
 
 // Destructor
 ElevatorController::~ElevatorController() {
-    delete[] elevators;  // Free the dynamically allocated array
+    // Free the dynamically allocated arrays
+    delete[] elevators;
+    delete[] floors;
 }
 
 /*
