@@ -3,7 +3,8 @@
 
 #include "Passenger.h"
 
-#include <list>
+#include <vector>
+#include <stack>
 
 class Elevator {
 public:
@@ -15,23 +16,25 @@ public:
     void setDestinationFloor(int dF);
     void setDirection(int d);
     void setCapacity(int c);
+    void setNumPassengers(int n);
 
     // Getters
-    std::list<Passenger>& getPassengers();
     int getCurrentFloor() const;
     int getDestinationFloor() const;
     int getDirection() const;
     int getCapacity() const;
+    int getNumPassengers() const;
 
     // Control Functions
     bool elevatorAtCapacity();
 
 private:
-    std::list<Passenger> passengers;
+    std::vector<std::stack<Passenger>> passengers;
     int currentFloor;
     int destinationFloor;
     int direction;
     int capacity;
+    int numPassengers;
 };
 
 #endif

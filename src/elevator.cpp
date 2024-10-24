@@ -2,7 +2,7 @@
 
 // Constructor
 Elevator::Elevator()
-    : currentFloor(0), destinationFloor(0), direction(0), capacity(0) {}
+    : currentFloor(0), destinationFloor(0), direction(0), capacity(0), numPassengers(0) {}
 
 /*
  * =======
@@ -30,16 +30,16 @@ void Elevator::setCapacity(int c) {
     capacity = c;
 }
 
+// Sets the number of passengers in the elevator
+void Elevator::setNumPassengers(int n) {
+    numPassengers = n;
+}
+
 /*
  * =======
  * GETTERS
  * =======
  */
-
-// Gets the elevator's passenger list
-std::list<Passenger>& Elevator::getPassengers() {
-    return passengers;
-}
 
 // Gets the elevator's current floor
 int Elevator::getCurrentFloor() const {
@@ -61,6 +61,11 @@ int Elevator::getCapacity() const {
     return capacity;
 }
 
+// Gets the number of passengers in the elevator
+int Elevator::getNumPassengers() const {
+    return numPassengers;
+}
+
 /*
  * =================
  * CONTROL FUNCTIONS
@@ -69,5 +74,5 @@ int Elevator::getCapacity() const {
 
 // Checks if the elevator is at capacity
 bool Elevator::elevatorAtCapacity() {
-    return (passengers.size() == capacity);
+    return (numPassengers == capacity);
 }
