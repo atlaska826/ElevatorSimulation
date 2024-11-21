@@ -14,7 +14,7 @@ public:
     void incrementTime();
     int getCurrentTime();
     void recordWaitTime(int waitTime);
-    double calcAverageWaitTime();
+    double calcAverageWaitTime() const;
 
     // Floor Control
     void addPassengerToFloor(int floor, Passenger passenger);
