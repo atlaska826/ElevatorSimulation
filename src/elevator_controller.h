@@ -13,16 +13,26 @@ public:
     // Time Control
     void incrementTime();
     int getCurrentTime();
+    void recordWaitTime(int waitTime);
+    double calcAverageWaitTime();
 
     // Floor Control
     void addPassengerToFloor(int floor, Passenger passenger);
     Passenger getPassengerFromFloor(int floor);
+
+    // System Logic
+    // TODO
+
+    // Elevator Control
+    // TODO
 
 private:
     int numFloors;
     int numElevators;
     int elevatorCapacity;
     int currentTime;
+    int totalWaitTime;
+    int totalPassengersServed;
     Floor* floors;
     Elevator* elevators;
 };

@@ -2,7 +2,7 @@
 
 // Constructor
 ElevatorController::ElevatorController(int numFloors, int numElevators, int elevatorCapacity)
-    : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity), currentTime(0) {
+    : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity), currentTime(0), totalWaitTime(0), totalPassengersServed(0) {
 
     // Initialize elevator array
     elevators = new Elevator[numElevators];
@@ -37,6 +37,20 @@ int ElevatorController::getCurrentTime() {
     return currentTime;
 }
 
+// Adds passenger's wait time to the totalWaitTime
+void ElevatorController::recordWaitTime(int waitTime) {
+    totalWaitTime += waitTime;
+}
+
+
+// Calculates the total average wait time
+double ElevatorController::calcAverageWaitTime() {
+    if (totalPassengersServed == 0) {
+        return 0.0;
+    }
+    return static_cast<double>(totalWaitTime) / totalPassengersServed;
+}
+
 /*
  * =============
  * FLOOR CONTROL
@@ -50,5 +64,23 @@ void ElevatorController::addPassengerToFloor(int floor, Passenger passenger) {
 
 // Gets the next passenger from a specified floor
 Passenger ElevatorController::getPassengerFromFloor(int floor) {
-    return floors[floor].getNextPassenger();
+    Passenger passenger = floors[floor].getNextPassenger();
+    recordWaitTime(passenger.pickupTime - passenger.requestTime);
+    return passenger;
 }
+
+/*
+ * ============
+ * SYSTEM LOGIC
+ * ============
+ */
+
+// TODO
+
+/*
+ * ================
+ * ELEVATOR CONTROL
+ * ================
+ */
+
+// TODO
