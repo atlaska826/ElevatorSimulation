@@ -62,7 +62,7 @@ void ElevatorController::addPassengerToFloor(int floor, Passenger passenger) {
     floors[floor].addPassenger(passenger);
 }
 
-// Gets the next passenger from a specified floor
+// Gets the next passenger from a specified floor and records the wait time
 Passenger ElevatorController::getPassengerFromFloor(int floor) {
     Passenger passenger = floors[floor].getNextPassenger();
     recordWaitTime(passenger.pickupTime - passenger.requestTime);
