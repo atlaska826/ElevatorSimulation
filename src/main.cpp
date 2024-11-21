@@ -5,19 +5,23 @@
 using namespace std;
 
 int main() {
-    int numFloors = 5;
-    int numElevators = 1;
-    int elevatorCapacity = 10;
+    // Simulation Variables
+    int numPassengersTesting = 100;
+    const int numPassengersPerSec = 3;
 
+    // Elevator Variables
+    const int numFloors = 5;
+    const int numElevators = 1;
+    const int elevatorCapacity = 10;
     ElevatorController controller(numFloors, numElevators, elevatorCapacity);
 
-    while (true) {
+    while (numPassengersTesting != 0) {
         controller.incrementTime();
-        // TODO: Every second, add passengers and then run a process requests code in ElevatorController
-        // TODO: Figure out what the stop conditions for the simulation are (either time or after a certain amount of passengers)
-        cout << "Average waiting time during simulation: " << controller.calcAverageWaitTime() << " seconds." << endl;
-        break;
+        // TODO: Generate a number of passengers each second until numPassengers testing is at 0
+        cout << controller.getCurrentTime() << " ";
+        numPassengersTesting--;
     }
 
+    cout << "\nAverage waiting time during simulation: " << controller.calcAverageWaitTime() << "s" << endl;
     return 0;
 }

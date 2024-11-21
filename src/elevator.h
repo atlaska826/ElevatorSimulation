@@ -27,6 +27,7 @@ public:
 
     // Control Functions
     bool elevatorAtCapacity() const;
+    bool elevatorIsIdle() const;
 
 private:
     std::vector<std::stack<Passenger>> passengers;

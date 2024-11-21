@@ -75,7 +75,33 @@ Passenger ElevatorController::getPassengerFromFloor(int floor) {
  * ============
  */
 
-// TODO
+// Finds the elevator most optimal to pick up the passenger
+Elevator* ElevatorController::findBestElevator(int floor) {
+    Elevator* bestElevator = nullptr;
+    int minScore = INT_MAX;
+
+    for (int i = 0; i < numElevators; ++i) {
+        Elevator* elevator = &elevators[i];
+
+        // Capacity Score: Favors elevators with open space
+        // FIXME: Either change to if the capacity is full AND potenitally update the score value
+        int capacityScore = ((elevator->getCapacity() - elevator->getNumPassengers()) > 1) ? 0 : 5;
+
+        // Direction Score: Favors elevators moving in the same direction the floor is
+        int directionScore; // TODO
+
+        // Proximity Score: Favors elevators closest to the request floor
+        int proximityScore = abs(elevator->getCurrentFloor() - floor);
+
+        // Total Score: Calculates the total score and checks to see if the elevator is the best
+        int totalScore = capacityScore + directionScore + proximityScore;
+        if (totalScore < minScore) {
+            minScore = totalScore;
+            bestElevator = elevator;
+        }
+    }
+    return bestElevator;
+}
 
 /*
  * ================

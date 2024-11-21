@@ -76,3 +76,8 @@ int Elevator::getNumPassengers() const {
 bool Elevator::elevatorAtCapacity() const {
     return (numPassengers == capacity);
 }
+
+// Checks if the elevator is idle
+bool Elevator::elevatorIsIdle() const {
+    return (direction == 0);
+}
