@@ -67,7 +67,7 @@ void ElevatorController::addPassengerToFloor(int floor, Passenger passenger) {
 // Gets the next passenger from a specified floor and records the wait time
 Passenger ElevatorController::getPassengerFromFloor(int floor) {
     Passenger passenger = floors[floor].getNextPassenger();
-    recordWaitTime(passenger.pickupTime - passenger.requestTime);
+    recordWaitTime(getCurrentTime() - passenger.requestTime);
     return passenger;
 }
 
@@ -77,11 +77,19 @@ Passenger ElevatorController::getPassengerFromFloor(int floor) {
  * ============
  */
 
+// Handles passenger requests
+void ElevatorController::processRequest(Passenger passenger) { // Runs every time a passenger is added to a floor
+    Elevator* passengerElevator = findBestElevator(passenger.destinationFloor);
+    // Add passenger to elevator
+    // Add floor to elevator's floor queue
+}
+
 // Finds the elevator most optimal to pick up the passenger
 Elevator* ElevatorController::findBestElevator(int floor) {
     Elevator* bestElevator = nullptr;
     int minScore = INT_MAX;
 
+    // Score Values
     const int FULL_CAPACITY_PENALTY = 20;
     const int HIGH_CAPACITY_PENALTY = 5;
     const int WRONG_DIRECTION_PENALTY = 10;

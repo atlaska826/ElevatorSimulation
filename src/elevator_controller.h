@@ -21,11 +21,14 @@ public:
     Passenger getPassengerFromFloor(int floor);
 
     // System Logic
-    // TODO
+    void processRequest(Passenger passenger);
+    Elevator* findBestElevator(int floor);
 
     // Elevator Control
-    // TODO: Process requests
-    Elevator* findBestElevator(int floor);
+    // TODO
+    // Add passenger
+    // Remove passenger
+    // Move elevator
 
 private:
     int numFloors;
