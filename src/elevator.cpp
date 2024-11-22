@@ -62,6 +62,11 @@ std::vector<std::stack<Passenger>>& Elevator::getPassengers() {
     return passengers;
 }
 
+// Returns the set of destination floors
+std::set<int>& Elevator::getDestinationFloors() {
+    return destinationFloors;
+}
+
 /*
  * =================
  * CONTROL FUNCTIONS

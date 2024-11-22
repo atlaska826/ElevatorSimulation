@@ -24,6 +24,7 @@ public:
     int getCapacity() const;
     int getNumPassengers() const;
     std::vector<std::stack<Passenger>>& getPassengers();
+    std::set<int>& getDestinationFloors();
 
     // Control Functions
     void addPassenger(Passenger passenger);

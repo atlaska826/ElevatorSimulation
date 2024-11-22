@@ -96,7 +96,7 @@ void ElevatorController::addPassengerToElevator(Elevator& elevator, Passenger pa
 // Runs the elevator's movements
 void ElevatorController::updateElevators() {
     for (int i = 0; i < numElevators; ++i) {
-        Elevator currentElevator = elevators[i];
+        Elevator& currentElevator = elevators[i];
         int currentFloor = currentElevator.getCurrentFloor();
 
         if (!currentElevator.getPassengers()[currentFloor].empty()) {
@@ -110,10 +110,26 @@ void ElevatorController::updateElevators() {
         }
 
         // TODO: Get next destination floor
-        int nextFloor = 2;
-        if (nextFloor != -1) {
-            currentFloor = nextFloor;
+
+        // Move elevator
+        int nextFloor;
+        std::set<int> destinationFloors = currentElevator.getDestinationFloors();
+
+        // Sets the elevator to idle if it's done transporting/picking up people
+        if (destinationFloors.empty()) {
+            currentElevator.setDirection(0);
+            nextFloor = -1;
+            continue;
         }
+
+        // Elevator is moving up
+        if (currentElevator.getDirection() > 0) {
+            // Stuff
+        } else {
+            // Stuff
+        }
+
+        currentFloor = nextFloor;
     }
 }
 
