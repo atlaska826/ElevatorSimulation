@@ -1,8 +1,9 @@
 #include "elevator.h"
+#include "floor.h"
 
 // Constructor
 Elevator::Elevator()
-    : currentFloor(0), destinationFloor(0), direction(0), capacity(0), numPassengers(0) {}
+    : currentFloor(0), direction(0), capacity(0), numPassengers(0) {}
 
 /*
  * =======
@@ -13,11 +14,6 @@ Elevator::Elevator()
 // Sets the elevator's current floor
 void Elevator::setCurrentFloor(int cF) {
     currentFloor = cF;
-}
-
-// Sets the elevator's destination floor
-void Elevator::setDestinationFloor(int dF) {
-    destinationFloor = dF;
 }
 
 // Sets the elevator's direction
@@ -46,11 +42,6 @@ int Elevator::getCurrentFloor() const {
     return currentFloor;
 }
 
-// Gets the elevator's destination floor
-int Elevator::getDestinationFloor() const {
-    return destinationFloor;
-}
-
 // Gets the elevator's direction
 int Elevator::getDirection() const {
     return direction;
@@ -64,6 +55,11 @@ int Elevator::getCapacity() const {
 // Gets the number of passengers in the elevator
 int Elevator::getNumPassengers() const {
     return numPassengers;
+}
+
+// Returns the passengers in the elevator
+std::vector<std::stack<Passenger>>& Elevator::getPassengers() {
+    return passengers;
 }
 
 /*
@@ -93,4 +89,9 @@ bool Elevator::elevatorAtCapacity() const {
 // Checks if the elevator is idle
 bool Elevator::elevatorIsIdle() const {
     return (direction == 0);
+}
+
+// Add a floor to the destinationFloors set
+void Elevator::addDestinationFloor(int floor) {
+    destinationFloors.insert(floor);
 }

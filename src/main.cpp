@@ -39,10 +39,12 @@ int main() {
             }
 
             Passenger passenger(initialFloor, destinationFloor, controller.getCurrentTime());
+            controller.addPassengerToFloor(initialFloor, passenger); // FIXME: Might not need this
             controller.addPassengerToOnboard(passenger);
         }
         numPassengersTesting -= passengersPerSec;
         controller.processRequests();
+        controller.updateElevators();
         controller.incrementTime();
     }
 

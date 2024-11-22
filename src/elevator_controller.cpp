@@ -89,23 +89,32 @@ Passenger ElevatorController::getPassengerFromFloor(int floor) {
  */
 
 // Adds a passenger to an elevator
-// FIXME: You might be able to remove this
 void ElevatorController::addPassengerToElevator(Elevator& elevator, Passenger passenger) {
     elevator.addPassenger(passenger);
 }
 
-// Clears the elevator for passengers of a specific floor
-void ElevatorController::clearElevator(Elevator& elevator, int floor) {
-    elevator.removePassengers(floor);
-}
+// Runs the elevator's movements
+void ElevatorController::updateElevators() {
+    for (int i = 0; i < numElevators; ++i) {
+        Elevator currentElevator = elevators[i];
+        int currentFloor = currentElevator.getCurrentFloor();
 
-// Moves the elevator one floor
-void ElevatorController::moveElevator(Elevator& elevator) {
-    // TODO
-    /*
-     * IF elevator's floor queue is empty, don't move
-     * ELSE-IF elevator's floor queue is not empty, move in direction of next floor
-     */
+        if (!currentElevator.getPassengers()[currentFloor].empty()) {
+            currentElevator.removePassengers(currentFloor);
+        }
+
+        // Get passengers from the current floor and add them to the elevator
+        while (!currentElevator.elevatorAtCapacity() && floors[currentFloor].hasWaitingPassengers()) {
+            Passenger passenger = getPassengerFromFloor(currentFloor);
+            addPassengerToElevator(currentElevator, passenger);
+        }
+
+        // TODO: Get next destination floor
+        int nextFloor = 2;
+        if (nextFloor != -1) {
+            currentFloor = nextFloor;
+        }
+    }
 }
 
 /*
@@ -120,7 +129,7 @@ void ElevatorController::processRequests() {
         Passenger passenger = onboardQueue.front();
         Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
         floors[passenger.initialFloor].addPassenger(passenger);
-        // FIXME: Add floor to best elevator's floor queue -- bestElevator->setDestinationFloor(3);
+        bestElevator->addDestinationFloor(passenger.destinationFloor);
         onboardQueue.pop();
     }
 }
