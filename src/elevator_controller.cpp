@@ -120,7 +120,7 @@ void ElevatorController::processRequests() {
         Passenger passenger = onboardQueue.front();
         Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
         floors[passenger.initialFloor].addPassenger(passenger);
-        bestElevator->setDestinationFloor(3); // FIXME: Add floor to best elevator's floor queue
+        // FIXME: Add floor to best elevator's floor queue -- bestElevator->setDestinationFloor(3);
         onboardQueue.pop();
     }
 }
