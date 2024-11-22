@@ -20,15 +20,17 @@ public:
     void addPassengerToFloor(int floor, Passenger passenger);
     Passenger getPassengerFromFloor(int floor);
 
+    // Elevator Control
+    void addPassengerToElevator(Elevator& elevator, Passenger passenger);
+    void clearElevator(Elevator& elevator, int floor);
+    void moveElevator(Elevator& elevator);
+
     // System Logic
-    void processRequest(Passenger passenger);
+    void processRequests();
     Elevator* findBestElevator(int floor);
 
-    // Elevator Control
-    // TODO
-    // Add passenger
-    // Remove passenger
-    // Move elevator
+    // Onboard Queue
+    void addPassengerToOnboard(Passenger passenger);
 
 private:
     int numFloors;
@@ -39,6 +41,7 @@ private:
     int totalPassengersServed;
     Floor* floors;
     Elevator* elevators;
+    std::queue<Passenger> onboardQueue;
 };
 
 #endif

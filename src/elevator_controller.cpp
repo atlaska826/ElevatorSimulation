@@ -55,6 +55,17 @@ double ElevatorController::calcAverageWaitTime() const {
 
 /*
  * =============
+ * ONBOARD QUEUE
+ * =============
+ */
+
+// Adds a passenger to the onboard queue
+void ElevatorController::addPassengerToOnboard(Passenger passenger) {
+    onboardQueue.push(passenger);
+}
+
+/*
+ * =============
  * FLOOR CONTROL
  * =============
  */
@@ -72,16 +83,46 @@ Passenger ElevatorController::getPassengerFromFloor(int floor) {
 }
 
 /*
+ * ================
+ * ELEVATOR CONTROL
+ * ================
+ */
+
+// Adds a passenger to an elevator
+// FIXME: You might be able to remove this
+void ElevatorController::addPassengerToElevator(Elevator& elevator, Passenger passenger) {
+    elevator.addPassenger(passenger);
+}
+
+// Clears the elevator for passengers of a specific floor
+void ElevatorController::clearElevator(Elevator& elevator, int floor) {
+    elevator.removePassengers(floor);
+}
+
+// Moves the elevator one floor
+void ElevatorController::moveElevator(Elevator& elevator) {
+    // TODO
+    /*
+     * IF elevator's floor queue is empty, don't move
+     * ELSE-IF elevator's floor queue is not empty, move in direction of next floor
+     */
+}
+
+/*
  * ============
  * SYSTEM LOGIC
  * ============
  */
 
 // Handles passenger requests
-void ElevatorController::processRequest(Passenger passenger) { // Runs every time a passenger is added to a floor
-    Elevator* passengerElevator = findBestElevator(passenger.destinationFloor);
-    // Add passenger to elevator
-    // Add floor to elevator's floor queue
+void ElevatorController::processRequests() {
+    while (!onboardQueue.empty()) {
+        Passenger passenger = onboardQueue.front();
+        Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
+        floors[passenger.initialFloor].addPassenger(passenger);
+        bestElevator->setDestinationFloor(3); // FIXME: Add floor to best elevator's floor queue
+        onboardQueue.pop();
+    }
 }
 
 // Finds the elevator most optimal to pick up the passenger
@@ -106,7 +147,7 @@ Elevator* ElevatorController::findBestElevator(int floor) {
 
         // Capacity Score: Favors elevators with open space
         int capacityScore = (elevator->elevatorAtCapacity()) ? FULL_CAPACITY_PENALTY :
-                            (elevator->getCapacity() - elevator->getNumPassengers() > 1) ? 0 : HIGH_CAPACITY_PENALTY;
+                            (elevator->getCapacity() - elevator->getNumPassengers() > 3) ? 0 : HIGH_CAPACITY_PENALTY;
 
         // Direction Score: Favors elevators that are idle (best) or moving in the same direction the floor is
         int directionScore;
@@ -137,11 +178,3 @@ Elevator* ElevatorController::findBestElevator(int floor) {
     }
     return bestElevator;
 }
-
-/*
- * ================
- * ELEVATOR CONTROL
- * ================
- */
-
-// TODO
