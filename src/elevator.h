@@ -26,6 +26,8 @@ public:
     int getNumPassengers() const;
 
     // Control Functions
+    void addPassenger(Passenger passenger);
+    void removePassengers(int floor);
     bool elevatorAtCapacity() const;
     bool elevatorIsIdle() const;
 

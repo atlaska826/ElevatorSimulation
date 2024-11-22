@@ -72,6 +72,19 @@ int Elevator::getNumPassengers() const {
  * =================
  */
 
+// Adds a passenger to the elevator's stack
+void Elevator::addPassenger(Passenger passenger) {
+    int floor = passenger.destinationFloor;
+    passengers[floor].push(passenger);
+}
+
+// Removes all the passengers for the giving floor
+void Elevator::removePassengers(int floor) {
+    while (!passengers[floor].empty()) {
+        passengers[floor].pop();
+    }
+}
+
 // Checks if the elevator is at capacity
 bool Elevator::elevatorAtCapacity() const {
     return (numPassengers == capacity);
