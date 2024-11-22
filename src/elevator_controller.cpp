@@ -140,7 +140,7 @@ Elevator* ElevatorController::findBestElevator(int floor) {
         Elevator* elevator = &elevators[i];
 
         // Immediately returns elevator if it is idle and at the request floor
-        if (elevator->getDirection() == 0 && elevator->getCurrentFloor() == floor) {
+        if (elevator->elevatorIsIdle() == 0 && elevator->getCurrentFloor() == floor) {
             // FIXME: Turn on once finished with debugging
             //return elevator;
         }
@@ -151,7 +151,7 @@ Elevator* ElevatorController::findBestElevator(int floor) {
 
         // Direction Score: Favors elevators that are idle (best) or moving in the same direction the floor is
         int directionScore;
-        if (elevator->getDirection() == 0) {
+        if (elevator->elevatorIsIdle()) {
             directionScore = IDLE_BONUS;
         } else if ((elevator->getDirection() == 1 && floor > elevator->getCurrentFloor()) ||
                     (elevator->getDirection() == -1 && floor < elevator->getCurrentFloor())) {

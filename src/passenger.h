@@ -4,11 +4,10 @@
 struct Passenger {
     int initialFloor;
     int destinationFloor;
-    int direction;
     int requestTime;
 
-    Passenger(int initial, int destination, int direct, int reqTime, int pickTime)
-        : initialFloor(initial), destinationFloor(destination), direction(direct), requestTime(reqTime) {}
+    Passenger(int initial, int destination, int reqTime)
+        : initialFloor(initial), destinationFloor(destination), requestTime(reqTime) {}
 };
 
 #endif
