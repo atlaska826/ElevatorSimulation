@@ -46,6 +46,6 @@ int main() {
         controller.incrementTime();
     }
 
-    cout << "\nAverage waiting time during simulation: " << controller.calcAverageWaitTime() << "s" << endl;
+    cout << "Average waiting time during simulation: " << controller.calcAverageWaitTime() << "s" << endl;
     return 0;
 }
