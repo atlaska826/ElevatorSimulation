@@ -33,15 +33,15 @@ public:
     void addPassengerToOnboard(Passenger passenger);
 
 private:
+    Floor* floors;
+    Elevator* elevators;
+    std::queue<Passenger> onboardQueue;
     int numFloors;
     int numElevators;
     int elevatorCapacity;
     int currentTime;
     int totalWaitTime;
     int totalPassengersServed;
-    Floor* floors;
-    Elevator* elevators;
-    std::queue<Passenger> onboardQueue;
 };
 
 #endif
