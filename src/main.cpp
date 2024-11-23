@@ -2,19 +2,20 @@
 #include "passenger.h"
 
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
 int main() {
     // Simulation Variables
-    //srand(time(0));
-    srand(0);
-    int numPassengersTesting = 100;
-    int passengersPerSec = 2;
+    srand(time(0));
+    //srand(0);
+    int numPassengersTesting = 500;
+    int passengersPerSec = 3;
 
     // Elevator Variables
-    const int numFloors = 5;
-    const int numElevators = 1;
+    const int numFloors = 20;
+    const int numElevators = 10;
     const int elevatorCapacity = 15;
     ElevatorController controller(numFloors, numElevators, elevatorCapacity);
 
@@ -39,7 +40,6 @@ int main() {
             }
 
             Passenger passenger(initialFloor, destinationFloor, controller.getCurrentTime());
-            controller.addPassengerToFloor(initialFloor, passenger); // FIXME: Might not need this
             controller.addPassengerToOnboard(passenger);
         }
         numPassengersTesting -= passengersPerSec;
@@ -48,6 +48,6 @@ int main() {
         controller.incrementTime();
     }
 
-    cout << "Average waiting time during simulation: " << controller.calcAverageWaitTime() << "s" << endl;
+    cout << "Average waiting time during simulation: " << fixed << setprecision(2) << controller.calcAverageWaitTime() << "s" << endl;
     return 0;
 }

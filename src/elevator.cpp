@@ -3,7 +3,7 @@
 
 // Constructor
 Elevator::Elevator()
-    : currentFloor(0), direction(0), capacity(0), numPassengers(0) {}
+    : currentFloor(0), direction(0), capacity(0), numPassengers(0), destinationFloors() {}
 
 /*
  * =======
@@ -73,16 +73,23 @@ std::set<int>& Elevator::getDestinationFloors() {
  * =================
  */
 
+// Initializes the passenger stacks
+void Elevator::initializePassengers(int numFloors) {
+    passengers.resize(numFloors);
+}
+
 // Adds a passenger to the elevator's stack
 void Elevator::addPassenger(Passenger passenger) {
     int floor = passenger.destinationFloor;
     passengers[floor].push(passenger);
+    numPassengers++;
 }
 
 // Removes all the passengers for the giving floor
 void Elevator::removePassengers(int floor) {
     while (!passengers[floor].empty()) {
         passengers[floor].pop();
+        numPassengers--;
     }
 }
 

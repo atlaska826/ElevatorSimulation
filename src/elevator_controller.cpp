@@ -6,10 +6,11 @@
 ElevatorController::ElevatorController(int numFloors, int numElevators, int elevatorCapacity)
     : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity), currentTime(0), totalWaitTime(0), totalPassengersServed(0) {
 
-    // Initialize elevator array
+    // Initialize elevator array and elevator passenger stacks
     elevators = new Elevator[numElevators];
     for (int i = 0; i < numElevators; ++i) {
         elevators[i].setCapacity(elevatorCapacity);
+        elevators[i].initializePassengers(numFloors);
     }
 
     // Initialize floor array
@@ -93,43 +94,102 @@ void ElevatorController::addPassengerToElevator(Elevator& elevator, Passenger pa
     elevator.addPassenger(passenger);
 }
 
+// Manages the destination floor and directional state for each elevator
+void ElevatorController::getNextDestinationFloor(Elevator& elevator, int floor) {
+    std::set<int>& destinationFloors = elevator.getDestinationFloors();
+    int nextFloor = floor;
+
+    // Sets direction to idle if elevator has no destination floors
+    if (destinationFloors.empty()) {
+        elevator.setDirection(0);
+        return;
+    }
+
+    // Elevator is idle
+    if (elevator.getDirection() == 0) {
+        // Find the smallest floor greater than or equal to the current floor
+        auto checkItr = destinationFloors.lower_bound(floor);
+
+        // If a valid floor is found above or at the current floor
+        if (checkItr != destinationFloors.end()) {
+            nextFloor = *checkItr;
+            elevator.setDirection(1); // Set direction to up
+        } else {
+            // Go to the next largest floor below the current one
+            nextFloor = *std::prev(destinationFloors.end());
+            elevator.setDirection(-1);
+        }
+
+        // Remove the curren floor from the destinations set
+        destinationFloors.erase(nextFloor);
+    }
+
+    // Elevator is moving up
+    else if (elevator.getDirection() > 0) {
+        // Find the smallest floor greater than or equal to the current floor
+        auto itr = destinationFloors.lower_bound(floor);
+
+        // If a valid floor is found above or at the current floor
+        if (itr != destinationFloors.end()) {
+            nextFloor = *itr;
+            destinationFloors.erase(itr);
+        } else {
+            // Switch direction if no higher floors exist
+            elevator.setDirection(-1);
+            if (!destinationFloors.empty()) { // Error check
+                nextFloor = *std::prev(destinationFloors.end());
+                destinationFloors.erase(std::prev(destinationFloors.end()));
+            }
+        }
+    }
+
+    // Elevator is moving down
+    else if (elevator.getDirection() < 0) {
+        // Find the first floor below the current floor
+        auto itr = destinationFloors.upper_bound(floor);
+
+        // If a valid floor below the current floor exists
+        if (itr != destinationFloors.begin()) {
+            --itr;
+            nextFloor = *itr;
+            destinationFloors.erase(itr);
+        } else {
+            // Switch direction if no lower floors exist
+            elevator.setDirection(1);
+            if (!destinationFloors.empty()) {
+                nextFloor = *destinationFloors.begin();
+                destinationFloors.erase(destinationFloors.begin());
+            }
+        }
+    }
+
+    // Set the elevator's current floor and output information
+    elevator.setCurrentFloor(nextFloor);
+    std::cout << "Elevator at floor " << floor
+              << " heading to floor " << elevator.getCurrentFloor()
+              << " with " << elevator.getNumPassengers() << " passengers." << std::endl;
+}
+
 // Runs the elevator's movements
 void ElevatorController::updateElevators() {
     for (int i = 0; i < numElevators; ++i) {
         Elevator& currentElevator = elevators[i];
         int currentFloor = currentElevator.getCurrentFloor();
+        std::vector<std::stack<Passenger>>& passengers = currentElevator.getPassengers();
 
-        if (!currentElevator.getPassengers()[currentFloor].empty()) {
+        // Disembark passengers getting off at the current floor
+        if (currentFloor < passengers.size() && !passengers[currentFloor].empty()) {
             currentElevator.removePassengers(currentFloor);
         }
 
-        // Get passengers from the current floor and add them to the elevator
+        // Board passengers from the current floor
         while (!currentElevator.elevatorAtCapacity() && floors[currentFloor].hasWaitingPassengers()) {
             Passenger passenger = getPassengerFromFloor(currentFloor);
             addPassengerToElevator(currentElevator, passenger);
         }
 
-        // TODO: Get next destination floor
-
-        // Move elevator
-        int nextFloor;
-        std::set<int> destinationFloors = currentElevator.getDestinationFloors();
-
-        // Sets the elevator to idle if it's done transporting/picking up people
-        if (destinationFloors.empty()) {
-            currentElevator.setDirection(0);
-            nextFloor = -1;
-            continue;
-        }
-
-        // Elevator is moving up
-        if (currentElevator.getDirection() > 0) {
-            // Stuff
-        } else {
-            // Stuff
-        }
-
-        currentFloor = nextFloor;
+        // Update the elevator's destination
+        getNextDestinationFloor(currentElevator, currentFloor);
     }
 }
 
@@ -143,10 +203,17 @@ void ElevatorController::updateElevators() {
 void ElevatorController::processRequests() {
     while (!onboardQueue.empty()) {
         Passenger passenger = onboardQueue.front();
-        Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
-        floors[passenger.initialFloor].addPassenger(passenger);
-        bestElevator->addDestinationFloor(passenger.destinationFloor);
         onboardQueue.pop();
+
+        floors[passenger.initialFloor].addPassenger(passenger);
+        Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
+        bestElevator->addDestinationFloor(passenger.destinationFloor);
+
+        if (bestElevator->elevatorIsIdle()) {
+            bestElevator->setDirection(passenger.destinationFloor > bestElevator->getCurrentFloor() ? 1 : -1);
+        }
+
+        totalPassengersServed++;
     }
 }
 
@@ -166,8 +233,7 @@ Elevator* ElevatorController::findBestElevator(int floor) {
 
         // Immediately returns elevator if it is idle and at the request floor
         if (elevator->elevatorIsIdle() == 0 && elevator->getCurrentFloor() == floor) {
-            // FIXME: Turn on once finished with debugging
-            //return elevator;
+            return elevator;
         }
 
         // Capacity Score: Favors elevators with open space
@@ -194,12 +260,6 @@ Elevator* ElevatorController::findBestElevator(int floor) {
             minScore = totalScore;
             bestElevator = elevator;
         }
-
-        // TODO: Remove debugging once finished
-        std::cout << "Elevator " << i << " - Capacity: " << capacityScore
-          << ", Direction: " << directionScore
-          << ", Proximity: " << proximityScore
-          << ", Total: " << totalScore << "\n";
     }
     return bestElevator;
 }

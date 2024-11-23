@@ -27,6 +27,7 @@ public:
     std::set<int>& getDestinationFloors();
 
     // Control Functions
+    void initializePassengers(int numFloors);
     void addPassenger(Passenger passenger);
     void removePassengers(int floor);
     bool elevatorAtCapacity() const;

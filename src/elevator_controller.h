@@ -22,6 +22,7 @@ public:
 
     // Elevator Control
     void addPassengerToElevator(Elevator& elevator, Passenger passenger);
+    void getNextDestinationFloor(Elevator& currentElevator, int currentFloor);
     void updateElevators();
 
     // System Logic
