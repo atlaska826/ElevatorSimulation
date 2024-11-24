@@ -8,4 +8,5 @@ add_executable(ElevatorSimulation
         src/elevator_controller.cpp
         src/elevator.cpp
         src/floor.cpp
+        src/simulation.cpp
 )

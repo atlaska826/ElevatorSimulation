@@ -1,7 +1,5 @@
 #include "elevator_controller.h"
 
-#include <iostream> // TODO: Remove later once you are done with debugging
-
 // Constructor
 ElevatorController::ElevatorController(int numFloors, int numElevators, int elevatorCapacity)
     : numFloors(numFloors), numElevators(numElevators), elevatorCapacity(elevatorCapacity), currentTime(0), totalWaitTime(0), totalPassengersServed(0) {
@@ -23,6 +21,23 @@ ElevatorController::~ElevatorController() {
     delete[] elevators;
     delete[] floors;
 }
+
+/*
+ * =======
+ * GETTERS
+ * =======
+ */
+
+// Get a list of the elevators
+Elevator* ElevatorController::getElevators() {
+    return elevators;
+}
+
+// Get the total number of passengers served
+int ElevatorController::getTotalPassengersServed() {
+    return totalPassengersServed;
+}
+
 
 /*
  * ============
@@ -63,6 +78,100 @@ double ElevatorController::calcAverageWaitTime() const {
 // Adds a passenger to the onboard queue
 void ElevatorController::addPassengerToOnboard(Passenger passenger) {
     onboardQueue.push(passenger);
+}
+
+/*
+ * ============
+ * SYSTEM LOGIC
+ * ============
+ */
+
+// Handles passenger requests
+void ElevatorController::processRequests() {
+    while (!onboardQueue.empty()) {
+        Passenger passenger = onboardQueue.front();
+        onboardQueue.pop();
+
+        floors[passenger.initialFloor].addPassenger(passenger);
+        Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
+        bestElevator->addDestinationFloor(passenger.destinationFloor);
+
+        if (bestElevator->elevatorIsIdle()) {
+            bestElevator->setDirection(passenger.destinationFloor > bestElevator->getCurrentFloor() ? 1 : -1);
+        }
+
+        totalPassengersServed++;
+    }
+}
+
+// Finds the elevator most optimal to pick up the passenger
+Elevator* ElevatorController::findBestElevator(int floor) {
+    Elevator* bestElevator = nullptr;
+    int minScore = INT_MAX;
+
+    // Score Values
+    const int FULL_CAPACITY_PENALTY = 20;
+    const int HIGH_CAPACITY_PENALTY = 5;
+    const int WRONG_DIRECTION_PENALTY = 10;
+    const int IDLE_BONUS = -5;
+
+    for (int i = 0; i < numElevators; ++i) {
+        Elevator* elevator = &elevators[i];
+
+        // Immediately returns elevator if it is idle and at the request floor
+        if (elevator->elevatorIsIdle() == 0 && elevator->getCurrentFloor() == floor) {
+            return elevator;
+        }
+
+        // Capacity Score: Favors elevators with open space
+        int capacityScore = (elevator->elevatorAtCapacity()) ? FULL_CAPACITY_PENALTY :
+                            (elevator->getCapacity() - elevator->getNumPassengers() > 3) ? 0 : HIGH_CAPACITY_PENALTY;
+
+        // Direction Score: Favors elevators that are idle (best) or moving in the same direction the floor is
+        int directionScore;
+        if (elevator->elevatorIsIdle()) {
+            directionScore = IDLE_BONUS;
+        } else if ((elevator->getDirection() == 1 && floor > elevator->getCurrentFloor()) ||
+                    (elevator->getDirection() == -1 && floor < elevator->getCurrentFloor())) {
+            directionScore = 0;
+        } else {
+            directionScore = WRONG_DIRECTION_PENALTY;
+        }
+
+        // Proximity Score: Favors elevators closest to the request floor
+        int proximityScore = abs(elevator->getCurrentFloor() - floor);
+
+        // Total Score: Calculates the total score and checks to see if the elevator is the best
+        int totalScore = capacityScore + directionScore + proximityScore;
+        if (totalScore < minScore) {
+            minScore = totalScore;
+            bestElevator = elevator;
+        }
+    }
+    return bestElevator;
+}
+
+// Runs the elevator's movements
+void ElevatorController::updateElevators() {
+    for (int i = 0; i < numElevators; ++i) {
+        Elevator& currentElevator = elevators[i];
+        int currentFloor = currentElevator.getCurrentFloor();
+        std::vector<std::stack<Passenger>>& passengers = currentElevator.getPassengers();
+
+        // Disembark passengers getting off at the current floor
+        if (currentFloor < passengers.size() && !passengers[currentFloor].empty()) {
+            currentElevator.removePassengers(currentFloor);
+        }
+
+        // Board passengers from the current floor
+        while (!currentElevator.elevatorAtCapacity() && floors[currentFloor].hasWaitingPassengers()) {
+            Passenger passenger = getPassengerFromFloor(currentFloor);
+            addPassengerToElevator(currentElevator, passenger);
+        }
+
+        // Update the elevator's destination
+        getNextDestinationFloor(currentElevator, currentFloor);
+    }
 }
 
 /*
@@ -165,101 +274,4 @@ void ElevatorController::getNextDestinationFloor(Elevator& elevator, int floor) 
 
     // Set the elevator's current floor and output information
     elevator.setCurrentFloor(nextFloor);
-    std::cout << "Elevator at floor " << floor
-              << " heading to floor " << elevator.getCurrentFloor()
-              << " with " << elevator.getNumPassengers() << " passengers." << std::endl;
-}
-
-// Runs the elevator's movements
-void ElevatorController::updateElevators() {
-    for (int i = 0; i < numElevators; ++i) {
-        Elevator& currentElevator = elevators[i];
-        int currentFloor = currentElevator.getCurrentFloor();
-        std::vector<std::stack<Passenger>>& passengers = currentElevator.getPassengers();
-
-        // Disembark passengers getting off at the current floor
-        if (currentFloor < passengers.size() && !passengers[currentFloor].empty()) {
-            currentElevator.removePassengers(currentFloor);
-        }
-
-        // Board passengers from the current floor
-        while (!currentElevator.elevatorAtCapacity() && floors[currentFloor].hasWaitingPassengers()) {
-            Passenger passenger = getPassengerFromFloor(currentFloor);
-            addPassengerToElevator(currentElevator, passenger);
-        }
-
-        // Update the elevator's destination
-        getNextDestinationFloor(currentElevator, currentFloor);
-    }
-}
-
-/*
- * ============
- * SYSTEM LOGIC
- * ============
- */
-
-// Handles passenger requests
-void ElevatorController::processRequests() {
-    while (!onboardQueue.empty()) {
-        Passenger passenger = onboardQueue.front();
-        onboardQueue.pop();
-
-        floors[passenger.initialFloor].addPassenger(passenger);
-        Elevator* bestElevator = findBestElevator(passenger.destinationFloor);
-        bestElevator->addDestinationFloor(passenger.destinationFloor);
-
-        if (bestElevator->elevatorIsIdle()) {
-            bestElevator->setDirection(passenger.destinationFloor > bestElevator->getCurrentFloor() ? 1 : -1);
-        }
-
-        totalPassengersServed++;
-    }
-}
-
-// Finds the elevator most optimal to pick up the passenger
-Elevator* ElevatorController::findBestElevator(int floor) {
-    Elevator* bestElevator = nullptr;
-    int minScore = INT_MAX;
-
-    // Score Values
-    const int FULL_CAPACITY_PENALTY = 20;
-    const int HIGH_CAPACITY_PENALTY = 5;
-    const int WRONG_DIRECTION_PENALTY = 10;
-    const int IDLE_BONUS = -5;
-
-    for (int i = 0; i < numElevators; ++i) {
-        Elevator* elevator = &elevators[i];
-
-        // Immediately returns elevator if it is idle and at the request floor
-        if (elevator->elevatorIsIdle() == 0 && elevator->getCurrentFloor() == floor) {
-            return elevator;
-        }
-
-        // Capacity Score: Favors elevators with open space
-        int capacityScore = (elevator->elevatorAtCapacity()) ? FULL_CAPACITY_PENALTY :
-                            (elevator->getCapacity() - elevator->getNumPassengers() > 3) ? 0 : HIGH_CAPACITY_PENALTY;
-
-        // Direction Score: Favors elevators that are idle (best) or moving in the same direction the floor is
-        int directionScore;
-        if (elevator->elevatorIsIdle()) {
-            directionScore = IDLE_BONUS;
-        } else if ((elevator->getDirection() == 1 && floor > elevator->getCurrentFloor()) ||
-                    (elevator->getDirection() == -1 && floor < elevator->getCurrentFloor())) {
-            directionScore = 0;
-        } else {
-            directionScore = WRONG_DIRECTION_PENALTY;
-        }
-
-        // Proximity Score: Favors elevators closest to the request floor
-        int proximityScore = abs(elevator->getCurrentFloor() - floor);
-
-        // Total Score: Calculates the total score and checks to see if the elevator is the best
-        int totalScore = capacityScore + directionScore + proximityScore;
-        if (totalScore < minScore) {
-            minScore = totalScore;
-            bestElevator = elevator;
-        }
-    }
-    return bestElevator;
 }
