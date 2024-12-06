@@ -175,15 +175,10 @@ void ElevatorController::updateElevators() {
 }
 
 /*
- * =============
- * FLOOR CONTROL
- * =============
+ * ==============
+ * SYSTEM CONTROL
+ * ==============
  */
-
-// Adds a passenger to the waiting queue of a specified floor
-void ElevatorController::addPassengerToFloor(int floor, Passenger passenger) {
-    floors[floor].addPassenger(passenger);
-}
 
 // Gets the next passenger from a specified floor and records the wait time
 Passenger ElevatorController::getPassengerFromFloor(int floor) {
@@ -191,12 +186,6 @@ Passenger ElevatorController::getPassengerFromFloor(int floor) {
     recordWaitTime(getCurrentTime() - passenger.requestTime);
     return passenger;
 }
-
-/*
- * ================
- * ELEVATOR CONTROL
- * ================
- */
 
 // Adds a passenger to an elevator
 void ElevatorController::addPassengerToElevator(Elevator& elevator, Passenger passenger) {

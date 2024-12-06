@@ -109,7 +109,7 @@ int getCapacity() {
 // Output's current elevator data
 void outputSummary(ElevatorController& controller) {
     cout << "=== SIMULATION RESULTS ===\n";
-    cout << "Simulation Duration: " << controller.getCurrentTime() << " seconds" << endl;
+    cout << "Simulation Duration: " << controller.getCurrentTime() << "s" << endl;
     cout << "Total Passengers Served: " << controller.getTotalPassengersServed() << endl;
     cout << "Average Wait Time: " << fixed << setprecision(2) << controller.calcAverageWaitTime() << "s" << endl;
 }

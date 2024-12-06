@@ -28,11 +28,8 @@ public:
     Elevator* findBestElevator(int floor);
     void updateElevators();
 
-    // Floor Control
-    void addPassengerToFloor(int floor, Passenger passenger);
+    // System Control
     Passenger getPassengerFromFloor(int floor);
-
-    // Elevator Control
     void addPassengerToElevator(Elevator& elevator, Passenger passenger);
     void getNextDestinationFloor(Elevator& currentElevator, int currentFloor);
 
