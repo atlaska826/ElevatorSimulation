@@ -77,7 +77,7 @@ int getIntegerFromUser(const string& inputPrompt, const int& maxValue) {
 
 // Gets the number of total passengers to test
 int getNumTotalPassengers() {
-    return getIntegerFromUser("Enter the total number of passengers to simulate (max 10000): ", 10000);
+    return getIntegerFromUser("Enter the total number of passengers to simulate (max 100000): ", 100000);
 }
 
 // Gets the number of passengers to simulate per second
